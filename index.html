@@ -1,431 +1,413 @@
 <!DOCTYPE html>
 <!--
-  RestockRadar launch page v2 - Frosted-glass design.
-  Founding-member launch: $1.99/mo locked for life, first 500 members or 90 days, then $4.99/mo.
+  RestockRadar launch page v3 - Drop-culture art direction.
+  Near-black + volt green. Anton condensed display, all caps. No gradients, no glass, no 3D blobs.
+  PRE-LAUNCH: founding list reserves the $1.99/mo rate. No payment due now. Service not yet operating.
   Form posts to FormSubmit; all fields (including phone + SMS opt-in) are emailed to the owner.
-  3D background: Vanta.js NET effect (CDN) over three.js. Pure CSS frosted-glass cards.
+  Founding window: first 500 members or 90 days from 2026-09-19, i.e. closes 2026-12-18 23:59 PT.
 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RestockRadar - The text that beats the bots</title>
-<meta name="description" content="Instant SMS restock alerts with buy links. Founding members lock $1.99/mo for life.">
+<title>RestockRadar - Get the text. Get the pair.</title>
+<meta name="description" content="Instant SMS restock alerts with the buy link. Founding members lock $1.99/mo for life. Pre-launch.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
 <style>
   :root {
-    --green: #3fb950;
-    --green-soft: rgba(63, 185, 80, 0.14);
-    --glass-bg: rgba(20, 26, 34, 0.45);
-    --glass-border: rgba(255, 255, 255, 0.14);
-    --glass-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.12);
-    --text: #f0f4f8;
-    --muted: #a7b0bc;
+    --bg: #0E0E0E;
+    --surface: #161616;
+    --line: #262626;
+    --text: #F2F2F2;
+    --muted: #8A8A8A;
+    --volt: #D4FF3F;
+    --red: #FF3B30;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background: #05070a; color: var(--text); line-height: 1.6;
+    background: var(--bg); color: var(--text); line-height: 1.55;
     -webkit-font-smoothing: antialiased;
   }
-  #vanta-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; }
-  .scrim {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
-    background: radial-gradient(ellipse 90% 60% at 50% 0%, rgba(5,7,10,0.15) 0%, rgba(5,7,10,0.72) 70%, rgba(5,7,10,0.9) 100%);
-    pointer-events: none;
+  .display { font-family: "Anton", "Arial Narrow", sans-serif; text-transform: uppercase; letter-spacing: 0.01em; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+  .topbar {
+    position: sticky; top: 0; z-index: 60;
+    background: #000; border-bottom: 1px solid var(--line);
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    padding: 10px 20px; flex-wrap: wrap;
   }
-  .wrap { max-width: 760px; margin: 0 auto; padding: 0 24px; }
-  .glass {
-    background: var(--glass-bg);
-    -webkit-backdrop-filter: blur(22px) saturate(160%);
-    backdrop-filter: blur(22px) saturate(160%);
-    border: 1px solid var(--glass-border);
-    box-shadow: var(--glass-highlight), 0 20px 60px rgba(0, 0, 0, 0.45);
-    border-radius: 20px;
+  .wordmark { font-family: "Anton", sans-serif; font-size: 18px; letter-spacing: 0.06em; }
+  .wordmark .dot { color: var(--volt); }
+  .countdown { font-size: 13px; letter-spacing: 0.12em; color: var(--muted); text-transform: uppercase; }
+  .countdown strong { color: var(--volt); font-variant-numeric: tabular-nums; letter-spacing: 0.06em; }
+  .ticker { background: var(--volt); color: #0E0E0E; overflow: hidden; white-space: nowrap; border-bottom: 1px solid #000; }
+  .ticker-track { display: inline-block; padding: 9px 0; animation: tick 28s linear infinite; }
+  .ticker span { font-family: "Anton", sans-serif; font-size: 15px; letter-spacing: 0.08em; text-transform: uppercase; padding: 0 18px; }
+  .ticker:hover .ticker-track { animation-play-state: paused; }
+  @keyframes tick { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .hero { padding: 84px 0 72px; border-bottom: 1px solid var(--line); }
+  .kicker {
+    display: inline-block; font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--volt); border: 1px solid var(--volt); padding: 7px 14px; margin-bottom: 30px;
   }
-  .urgency-bar {
-    text-align: center; font-weight: 700; font-size: 14px;
-    padding: 13px 18px; letter-spacing: 0.2px;
-    background: linear-gradient(135deg, rgba(63,185,80,0.85), rgba(46,160,67,0.85));
-    -webkit-backdrop-filter: blur(22px) saturate(160%);
-    backdrop-filter: blur(22px) saturate(160%);
-    border-bottom: 1px solid rgba(255,255,255,0.18);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.25);
-    color: #06130a;
-    position: sticky; top: 0; z-index: 50;
-  }
-  .urgency-bar span { text-decoration: underline; }
-  header.hero { padding: 90px 0 56px; text-align: center; }
-  .badge {
-    display: inline-block; font-size: 12px; letter-spacing: 1.5px;
-    text-transform: uppercase; color: var(--green);
-    border: 1px solid rgba(63,185,80,0.5); border-radius: 999px;
-    padding: 8px 18px; margin-bottom: 28px; font-weight: 700;
-    background: var(--green-soft);
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
-  }
-  h1 {
-    font-size: clamp(44px, 9vw, 84px); line-height: 1.05; margin-bottom: 22px;
-    letter-spacing: -0.03em; font-weight: 800;
-    text-shadow: 0 4px 30px rgba(0,0,0,0.5);
-  }
-  h1 .accent {
-    background: linear-gradient(135deg, #7ee787, #3fb950 60%, #2ea043);
-    -webkit-background-clip: text; background-clip: text; color: transparent;
-  }
-  .subhead {
-    font-size: 19px; color: var(--muted); max-width: 600px; margin: 0 auto 36px;
-    text-shadow: 0 2px 12px rgba(0,0,0,0.6);
-  }
-  .cta-row { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  h1.display { font-size: clamp(64px, 14vw, 170px); line-height: 0.95; margin-bottom: 26px; }
+  h1 .volt { color: var(--volt); }
+  .dek { font-size: 19px; color: var(--muted); max-width: 620px; margin-bottom: 36px; }
+  .dek strong { color: var(--text); }
+  .cta-row { display: flex; gap: 14px; flex-wrap: wrap; }
   .btn {
-    display: inline-block; font-weight: 700; font-size: 17px;
-    border-radius: 14px; padding: 16px 32px; cursor: pointer;
-    text-decoration: none; font-family: inherit; transition: transform 0.15s ease, box-shadow 0.15s ease;
-    background: linear-gradient(135deg, #56d364, #3fb950);
-    color: #06130a; border: 1px solid rgba(255,255,255,0.25);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 8px 32px rgba(63,185,80,0.35);
+    display: inline-block; font-family: "Anton", sans-serif; text-transform: uppercase; letter-spacing: 0.06em;
+    font-size: 18px; padding: 16px 34px; text-decoration: none; cursor: pointer; border: none;
+    background: var(--volt); color: #0E0E0E; transition: transform 0.15s ease;
   }
-  .btn:hover { transform: translateY(-2px); box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 12px 40px rgba(63,185,80,0.5); }
+  .btn:hover { transform: translateY(-2px); }
   .btn-ghost {
-    display: inline-block; font-weight: 600; font-size: 17px;
-    border-radius: 14px; padding: 16px 32px; cursor: pointer;
-    text-decoration: none; font-family: inherit; color: var(--text);
-    background: rgba(255,255,255,0.06);
-    -webkit-backdrop-filter: blur(18px) saturate(160%);
-    backdrop-filter: blur(18px) saturate(160%);
-    border: 1px solid var(--glass-border);
-    box-shadow: var(--glass-highlight);
-    transition: transform 0.15s ease, background 0.15s ease;
+    display: inline-block; font-family: "Anton", sans-serif; text-transform: uppercase; letter-spacing: 0.06em;
+    font-size: 18px; padding: 16px 34px; text-decoration: none; cursor: pointer;
+    background: transparent; color: var(--text); border: 1px solid var(--line); transition: border-color 0.15s ease, transform 0.15s ease;
   }
-  .btn-ghost:hover { transform: translateY(-2px); background: rgba(255,255,255,0.1); }
-  section { padding: 48px 0; }
-  h2 {
-    font-size: clamp(26px, 4vw, 34px); margin-bottom: 26px; letter-spacing: -0.02em;
-    text-align: center; font-weight: 800;
+  .btn-ghost:hover { border-color: var(--volt); transform: translateY(-2px); }
+  section.block { padding: 72px 0; border-bottom: 1px solid var(--line); }
+  .section-kicker { font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--volt); margin-bottom: 18px; }
+  h2.display { font-size: clamp(40px, 7vw, 76px); line-height: 1; margin-bottom: 30px; }
+  .big-lines p.display { font-size: clamp(34px, 6vw, 64px); line-height: 1.05; margin-bottom: 10px; }
+  .big-lines p.dim { color: var(--muted); }
+  .big-lines .answer { margin-top: 26px; font-size: 18px; color: var(--muted); max-width: 640px; }
+  .big-lines .answer strong { color: var(--volt); }
+  .steps { border-top: 1px solid var(--line); }
+  .step { display: grid; grid-template-columns: 90px 1fr; gap: 20px; padding: 28px 0; border-bottom: 1px solid var(--line); align-items: baseline; }
+  .step .n { font-family: "Anton", sans-serif; font-size: 44px; color: var(--volt); }
+  .step h3.display { font-size: 30px; margin-bottom: 6px; }
+  .step p { color: var(--muted); font-size: 16px; max-width: 600px; }
+  .statement { background: var(--volt); color: #0E0E0E; padding: 64px 0; }
+  .statement p.display { font-size: clamp(48px, 10vw, 120px); line-height: 0.95; }
+  .cats { border-top: 1px solid var(--line); }
+  .cat { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 24px 0; border-bottom: 1px solid var(--line); transition: transform 0.15s ease; }
+  .cat:hover { transform: translateX(8px); }
+  .cat h3.display { font-size: clamp(26px, 4vw, 40px); }
+  .cat span { color: var(--muted); font-size: 14px; text-align: right; }
+  .proof-grid { display: grid; gap: 40px; align-items: center; }
+  @media (min-width: 760px) { .proof-grid { grid-template-columns: 320px 1fr; } }
+  .phone { background: #000; border: 1px solid var(--line); border-radius: 34px; padding: 14px; max-width: 300px; margin: 0 auto; }
+  .phone-screen { background: var(--surface); border-radius: 22px; padding: 18px 14px 26px; }
+  .notch { width: 110px; height: 22px; background: #000; border-radius: 12px; margin: 0 auto 18px; }
+  .sms { background: #2C2C2E; border-radius: 16px; padding: 14px; font-size: 14px; line-height: 1.5; }
+  .sms .from { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+  .sms .from b { color: var(--volt); }
+  .sms .head { font-weight: 700; margin-bottom: 4px; }
+  .sms .link { color: var(--volt); }
+  .proof-points { list-style: none; }
+  .proof-points li { padding: 16px 0; border-bottom: 1px solid var(--line); font-size: 17px; }
+  .proof-points li strong { color: var(--volt); }
+  .proof-points li span { color: var(--muted); display: block; font-size: 14px; margin-top: 4px; }
+  .plans { display: grid; gap: 0; border: 1px solid var(--line); }
+  @media (min-width: 720px) { .plans { grid-template-columns: 1fr 1.2fr 1fr; } }
+  .plan { padding: 34px 28px; border-bottom: 1px solid var(--line); }
+  @media (min-width: 720px) { .plan { border-bottom: none; border-right: 1px solid var(--line); } .plan:last-child { border-right: none; } }
+  .plan.featured { background: var(--surface); border-top: 3px solid var(--volt); }
+  @media (min-width: 720px) { .plan.featured { border-top: none; border-left: 3px solid var(--volt); border-right: 3px solid var(--volt); } }
+  .plan .tier { font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+  .plan.featured .tier { color: var(--volt); }
+  .plan .price { font-family: "Anton", sans-serif; font-size: 52px; line-height: 1; margin-bottom: 4px; }
+  .plan .price small { font-family: -apple-system, sans-serif; font-size: 14px; color: var(--muted); letter-spacing: 0; }
+  .plan .strike { color: var(--muted); text-decoration: line-through; font-size: 14px; margin-bottom: 16px; }
+  .plan ul { list-style: none; }
+  .plan li { font-size: 15px; color: var(--text); padding: 7px 0; border-top: 1px solid var(--line); }
+  .plan .note { color: var(--muted); font-size: 13px; margin-top: 16px; }
+  .form-block { background: var(--surface); border: 1px solid var(--line); padding: 40px 32px; }
+  form.join { display: grid; gap: 18px; margin-top: 26px; }
+  form.join label { font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); display: grid; gap: 8px; }
+  form.join input[type="text"], form.join input[type="email"],
+  form.join input[type="tel"], form.join select {
+    background: #000; border: 1px solid var(--line); color: var(--text);
+    font-size: 16px; padding: 15px 16px; width: 100%; font-family: inherit; border-radius: 0;
   }
-  .problem p { color: var(--muted); margin-bottom: 14px; font-size: 18px; text-align: center; }
-  .problem p strong { color: var(--text); }
-  .problem-card { padding: 34px 32px; margin-top: 8px; }
-  .steps { display: grid; gap: 18px; }
-  .step { padding: 26px 26px; display: flex; gap: 18px; align-items: flex-start; }
-  .step .num {
-    flex-shrink: 0; width: 40px; height: 40px; line-height: 40px;
-    text-align: center; border-radius: 12px;
-    background: linear-gradient(135deg, #56d364, #2ea043);
-    color: #06130a; font-weight: 800; font-size: 18px;
-    box-shadow: 0 4px 18px rgba(63,185,80,0.4), inset 0 1px 0 rgba(255,255,255,0.4);
-  }
-  .step p { color: #d6dde5; font-size: 16px; }
-  .step p strong { color: var(--text); }
-  .cats { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-  @media (max-width: 520px) { .cats { grid-template-columns: 1fr; } }
-  .cat { padding: 24px 22px; font-size: 16px; transition: transform 0.15s ease; }
-  .cat:hover { transform: translateY(-3px); }
-  .cat strong { display: block; font-size: 18px; margin-bottom: 4px; }
-  .cat span { color: var(--muted); font-size: 14px; }
-  .plans { display: grid; gap: 18px; }
-  @media (min-width: 640px) { .plans { grid-template-columns: 1fr 1fr 1fr; align-items: stretch; } }
-  .plan { padding: 30px 24px; position: relative; display: flex; flex-direction: column; }
-  .plan.featured {
-    border-color: rgba(63,185,80,0.6); border-width: 1.5px;
-    background: linear-gradient(160deg, rgba(63,185,80,0.16), rgba(20,26,34,0.45) 55%);
-    box-shadow: var(--glass-highlight), 0 20px 60px rgba(63,185,80,0.18);
-  }
-  .plan .flag {
-    position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
-    background: linear-gradient(135deg, #56d364, #2ea043); color: #06130a;
-    font-size: 11px; font-weight: 800; letter-spacing: 1px;
-    padding: 5px 14px; border-radius: 999px; white-space: nowrap;
-    box-shadow: 0 4px 16px rgba(63,185,80,0.5);
-  }
-  .plan h3 { font-size: 18px; margin-bottom: 2px; color: var(--muted); font-weight: 600; }
-  .plan.featured h3 { color: var(--green); }
-  .plan .price { font-size: 34px; font-weight: 800; margin: 8px 0 2px; letter-spacing: -0.02em; }
-  .plan .price small { font-size: 14px; font-weight: 400; color: var(--muted); }
-  .plan .strike { color: var(--muted); text-decoration: line-through; font-size: 15px; }
-  .plan ul { list-style: none; margin-top: 14px; flex-grow: 1; }
-  .plan li { color: #d6dde5; font-size: 15px; margin-bottom: 9px; padding-left: 22px; position: relative; }
-  .plan li::before {
-    content: "+"; position: absolute; left: 0; color: var(--green); font-weight: 800; font-size: 17px;
-  }
-  .plan .note { color: var(--muted); font-size: 13px; margin-top: 14px; }
-  form.waitlist { padding: 34px 30px; display: grid; gap: 16px; }
-  form.waitlist h2 { text-align: left; margin-bottom: 4px; }
-  .form-sub { color: var(--muted); font-size: 15px; margin-bottom: 6px; }
-  form.waitlist label { font-size: 14px; color: var(--muted); display: grid; gap: 7px; font-weight: 600; }
-  form.waitlist input[type="text"], form.waitlist input[type="email"],
-  form.waitlist input[type="tel"], form.waitlist select {
-    background: rgba(5,7,10,0.55); border: 1px solid var(--glass-border);
-    border-radius: 12px; color: var(--text); font-size: 16px;
-    padding: 14px 16px; width: 100%; font-family: inherit;
-    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
-  }
-  form.waitlist input:focus, form.waitlist select:focus {
-    outline: none; border-color: rgba(63,185,80,0.7);
-    box-shadow: 0 0 0 3px rgba(63,185,80,0.2);
-  }
-  form.waitlist select option { background: #0d1117; }
-  form.waitlist button {
-    background: linear-gradient(135deg, #56d364, #2ea043); color: #06130a;
-    font-weight: 800; font-size: 17px; border: 1px solid rgba(255,255,255,0.25);
-    border-radius: 12px; padding: 16px; cursor: pointer; font-family: inherit;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 8px 32px rgba(63,185,80,0.35);
-    transition: transform 0.15s ease;
-  }
-  form.waitlist button:hover { transform: translateY(-2px); }
-  .sms-optin {
-    display: flex; gap: 12px; align-items: flex-start;
-    background: rgba(5,7,10,0.55); border: 1px solid var(--glass-border);
-    border-radius: 12px; padding: 16px;
-  }
-  .sms-optin input[type="checkbox"] {
-    width: 22px; height: 22px; margin-top: 2px; flex-shrink: 0; accent-color: #3fb950; cursor: pointer;
-  }
-  .sms-optin span { font-size: 13px; color: var(--muted); line-height: 1.55; }
+  form.join input:focus, form.join select:focus { outline: none; border-color: var(--volt); }
+  form.join select option { background: #000; }
+  .sms-optin { display: flex; gap: 12px; align-items: flex-start; border: 1px solid var(--line); padding: 16px; background: #000; }
+  .sms-optin input[type="checkbox"] { width: 22px; height: 22px; margin-top: 2px; flex-shrink: 0; accent-color: #D4FF3F; cursor: pointer; }
+  .sms-optin span { font-size: 13px; color: var(--muted); line-height: 1.55; text-transform: none; letter-spacing: 0; }
   .sms-optin span strong { color: var(--text); }
-  .success { display: none; padding: 48px 32px; text-align: center; }
-  .success h3 { color: var(--green); font-size: 24px; margin-bottom: 12px; }
-  .success p { color: #d6dde5; }
-  .faq details {
-    background: var(--glass-bg);
-    -webkit-backdrop-filter: blur(22px) saturate(160%);
-    backdrop-filter: blur(22px) saturate(160%);
-    border: 1px solid var(--glass-border); border-radius: 16px;
-    box-shadow: var(--glass-highlight);
-    padding: 20px 22px; margin-bottom: 12px;
+  .sms-optin a { color: var(--volt); }
+  form.join button {
+    font-family: "Anton", sans-serif; text-transform: uppercase; letter-spacing: 0.06em; font-size: 19px;
+    background: var(--volt); color: #0E0E0E; border: none; padding: 18px; cursor: pointer; transition: transform 0.15s ease;
   }
-  .faq summary { font-weight: 600; cursor: pointer; font-size: 16px; }
-  .faq summary::marker { color: var(--green); }
-  .faq p { color: var(--muted); margin-top: 10px; font-size: 15px; }
-  footer { padding: 40px 0 56px; text-align: center; color: var(--muted); font-size: 13px; }
-  .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
-  .reveal.visible { opacity: 1; transform: translateY(0); }
+  form.join button:hover { transform: translateY(-2px); }
+  .success { display: none; padding: 60px 20px; text-align: center; }
+  .success h3.display { font-size: 44px; color: var(--volt); margin-bottom: 12px; }
+  .success p { color: var(--muted); }
+  .faq details { border-top: 1px solid var(--line); padding: 22px 0; }
+  .faq details:last-child { border-bottom: 1px solid var(--line); }
+  .faq summary { font-family: "Anton", sans-serif; text-transform: uppercase; letter-spacing: 0.04em; font-size: 20px; cursor: pointer; }
+  .faq summary::marker { color: var(--volt); }
+  .faq p { color: var(--muted); margin-top: 10px; font-size: 15px; max-width: 640px; }
+  footer { padding: 44px 0 60px; }
+  footer .micro { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+  footer nav { margin: 14px 0; }
+  footer nav a { color: var(--text); font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; margin-right: 22px; text-decoration: none; border-bottom: 1px solid var(--volt); }
+  footer p { font-size: 12px; color: var(--muted); margin-top: 10px; }
   @media (prefers-reduced-motion: reduce) {
-    .reveal { opacity: 1; transform: none; transition: none; }
     html { scroll-behavior: auto; }
+    .ticker-track { animation: none; }
+    .btn, .btn-ghost, .cat, form.join button { transition: none; }
   }
 </style>
 </head>
 <body>
 
-<div id="vanta-bg"></div>
-<div class="scrim"></div>
+<div class="topbar">
+  <div class="wordmark">RESTOCK<span class="dot">RADAR</span></div>
+  <div class="countdown">Founding window closes in <strong id="cd">--D --H --M --S</strong></div>
+</div>
 
-<div class="urgency-bar">FOUNDING LAUNCH: <span>$1.99/mo locked for life</span> for the first 500 members. Then it is $4.99. No exceptions.</div>
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track" id="tickerTrack">
+    <span>Sneakers</span><span>///</span><span>GPUs</span><span>///</span><span>Collectibles</span><span>///</span><span>Tickets</span><span>///</span><span>Shock drops don't wait</span><span>///</span><span>$1.99/mo founding rate</span><span>///</span><span>Sneakers</span><span>///</span><span>GPUs</span><span>///</span><span>Collectibles</span><span>///</span><span>Tickets</span><span>///</span><span>Shock drops don't wait</span><span>///</span><span>$1.99/mo founding rate</span><span>///</span>
+  </div>
+</div>
 
 <header class="hero">
   <div class="wrap">
-    <div class="badge">Founding members enrolling now</div>
-    <h1>The text that <span class="accent">beats the bots.</span></h1>
-    <p class="subhead">RestockRadar watches the drops around the clock. The second your item restocks, you get a text with the buy link. Tap it, check out, done. Before the scalpers. Before the group chat even wakes up.</p>
+    <div class="kicker">Pre-launch — Founding list open</div>
+    <h1 class="display">Get the text.<br><span class="volt">Get the pair.</span></h1>
+    <p class="dek">RestockRadar sends <strong>instant SMS alerts with the buy link</strong> the second your item restocks. Sneakers, GPUs, collectibles, tickets. <strong>We alert, you buy.</strong></p>
     <div class="cta-row">
-      <a class="btn" href="#waitlist">Claim my $1.99 founding rate</a>
-      <a class="btn-ghost" href="#pricing">See plans</a>
+      <a class="btn" href="#join">Text me the drops</a>
+      <a class="btn-ghost" href="#pricing">See pricing</a>
     </div>
   </div>
 </header>
 
 <div class="wrap">
-
-  <section class="problem reveal">
-    <h2>The problem</h2>
-    <div class="glass problem-card">
-      <p>Limited drops sell out in <strong>seconds</strong>.</p>
-      <p>Scalpers run bots. You refresh the page by hand.</p>
-      <p>By the time you see the restock post, it is <strong>gone</strong>.</p>
-      <p style="margin-bottom:0">Email alerts are too slow. Discord pings get buried. The only alert fast enough is the one already in your hand: <strong>a text message.</strong></p>
+  <section class="block">
+    <div class="section-kicker">The problem</div>
+    <div class="big-lines">
+      <p class="display">Drops sell out in seconds.</p>
+      <p class="display dim">Bots eat first.</p>
+      <p class="display dim">You refresh by hand.</p>
+      <p class="answer">Email is too slow. Discord gets buried. The fastest alert is the one already in your hand: <strong>a text message.</strong></p>
     </div>
   </section>
 
-  <section class="reveal">
-    <h2>How it works</h2>
+  <section class="block">
+    <div class="section-kicker">How it works</div>
+    <h2 class="display">Three steps. Zero bots.</h2>
     <div class="steps">
-      <div class="glass step">
-        <div class="num">1</div>
-        <p><strong>Tell us what you hunt.</strong> Drop in the product links and your size. Sneakers, GPUs, collectibles, whatever you keep missing.</p>
+      <div class="step">
+        <div class="n">01</div>
+        <div><h3 class="display">Set your targets</h3><p>Tell us the products and sizes you keep missing. Sneakers, GPUs, collectibles, whatever.</p></div>
       </div>
-      <div class="glass step">
-        <div class="num">2</div>
-        <p><strong>We watch around the clock.</strong> Our monitors check the product pages constantly, including while you sleep.</p>
+      <div class="step">
+        <div class="n">02</div>
+        <div><h3 class="display">We watch the stores</h3><p>Our monitors track product pages across major retailers and flag restocks the moment they happen.</p></div>
       </div>
-      <div class="glass step">
-        <div class="num">3</div>
-        <p><strong>You get the text.</strong> Item, price, and a buy link, straight to your phone. Tap it and check out in your own browser. You buy it yourself, no bot, no banned account.</p>
+      <div class="step">
+        <div class="n">03</div>
+        <div><h3 class="display">You get the text first</h3><p>Item, price, buy link. Tap it and check out in your own browser. You buy it yourself. No bot, no banned account.</p></div>
       </div>
     </div>
   </section>
+</div>
 
-  <section class="reveal">
-    <h2>What we watch</h2>
+<div class="statement">
+  <div class="wrap"><p class="display">We alert. You buy.</p></div>
+</div>
+
+<div class="wrap">
+  <section class="block">
+    <div class="section-kicker">What we watch</div>
+    <h2 class="display">Pick your hunt</h2>
     <div class="cats">
-      <div class="glass cat"><strong>Sneakers</strong><span>Limited drops and restocks</span></div>
-      <div class="glass cat"><strong>Tech restocks</strong><span>GPUs, consoles, hard to find gear</span></div>
-      <div class="glass cat"><strong>Collectibles</strong><span>Trading cards, figures, exclusives</span></div>
-      <div class="glass cat"><strong>Tickets</strong><span>Concerts and events (alerts only, you buy)</span></div>
+      <div class="cat"><h3 class="display">Sneakers</h3><span>Limited drops and restocks</span></div>
+      <div class="cat"><h3 class="display">Tech restocks</h3><span>GPUs, consoles, hard-to-find gear</span></div>
+      <div class="cat"><h3 class="display">Collectibles</h3><span>Trading cards, figures, exclusives</span></div>
+      <div class="cat"><h3 class="display">Tickets</h3><span>Concerts and events. Alerts only, you buy.</span></div>
     </div>
   </section>
 
-  <section id="pricing" class="reveal">
-    <h2>Launch pricing</h2>
+  <section class="block">
+    <div class="section-kicker">The text</div>
+    <h2 class="display">This is what winning looks like</h2>
+    <div class="proof-grid">
+      <div>
+        <div class="phone">
+          <div class="phone-screen">
+            <div class="notch"></div>
+            <div class="sms">
+              <div class="from"><b>RestockRadar</b> · now</div>
+              <div class="head">JORDAN 4 'RARE AIR' — RESTOCK</div>
+              <div>Size 10 back in stock. $215.</div>
+              <div class="link">Tap for buy link →</div>
+            </div>
+          </div>
+        </div>
+        <p style="text-align:center;color:var(--muted);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;margin-top:12px;">Preview — alert design</p>
+      </div>
+      <ul class="proof-points">
+        <li><strong>Item. Price. Buy link.</strong><span>Nothing else. No fluff, no newsletter voice.</span></li>
+        <li><strong>Only when it restocks.</strong><span>No spam, no promos. If your target has not moved, your phone stays quiet.</span></li>
+        <li><strong>Never between 9PM and 8AM.</strong><span>Your time, your sleep. Alerts wait for morning.</span></li>
+        <li><strong>Reply STOP anytime.</strong><span>One word and the texts stop. No dark patterns.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="block" id="pricing">
+    <div class="section-kicker">Pricing</div>
+    <h2 class="display">Lock it before the window closes</h2>
     <div class="plans">
-      <div class="glass plan">
-        <h3>Free</h3>
+      <div class="plan">
+        <div class="tier">Free</div>
         <div class="price">$0<small>/mo</small></div>
+        <div class="strike">&nbsp;</div>
         <ul>
           <li>Email alerts</li>
-          <li>Up to 5 watched items</li>
-          <li>Checks every 15 minutes</li>
+          <li>Up to 5 targets</li>
         </ul>
+        <p class="note">At launch.</p>
       </div>
-      <div class="glass plan featured">
-        <div class="flag">FOUNDING RATE</div>
-        <h3>Instant SMS</h3>
+      <div class="plan featured">
+        <div class="tier">Founding member</div>
         <div class="price">$1.99<small>/mo</small></div>
         <div class="strike">$4.99/mo after launch</div>
         <ul>
-          <li>Instant text with buy link</li>
-          <li>Unlimited watched items</li>
-          <li>Checks every 60 seconds</li>
+          <li>Instant SMS with buy link</li>
+          <li>Unlimited targets</li>
           <li>Rate locked for life</li>
+          <li>Cancel anytime</li>
         </ul>
-        <p class="note">First 500 members or 90 days, whichever comes first. Then the door closes and it is $4.99.</p>
+        <p class="note">First 500 members or 90 days, whichever comes first. No payment due until launch.</p>
       </div>
-      <div class="glass plan">
-        <h3>Pro</h3>
+      <div class="plan">
+        <div class="tier">Pro</div>
         <div class="price">$14.99<small>/mo</small></div>
+        <div class="strike">&nbsp;</div>
         <ul>
-          <li>Everything in Instant SMS</li>
+          <li>Everything in SMS</li>
           <li>Price-drop alerts</li>
           <li>Multi-retailer matching</li>
         </ul>
-        <p class="note">Coming after launch.</p>
+        <p class="note">After launch.</p>
       </div>
     </div>
   </section>
 
-  <section id="waitlist" class="reveal">
-    <form class="glass waitlist" id="waitlistForm" action="https://formsubmit.co/fcarrasco@echelonls.com" method="POST">
-      <h2>Claim your founding spot</h2>
-      <p class="form-sub">Lock the $1.99/mo rate before the window closes.</p>
-      <input type="hidden" name="_subject" value="New RestockRadar founding member signup">
-      <input type="hidden" name="_autoresponse" value="You are on the RestockRadar founding member list! You locked the $1.99/mo rate for life. We will text and email you the moment we launch.">
-      <input type="hidden" name="_next" value="https://echelonglobal.github.io/restockradar/?joined=true">
-      <label>Name
-        <input type="text" name="name" required autocomplete="name" placeholder="Your name">
-      </label>
-      <label>Email
-        <input type="email" name="email" required autocomplete="email" placeholder="you@example.com">
-      </label>
-      <label>Phone (for instant SMS alerts)
-        <input type="tel" name="phone" autocomplete="tel" placeholder="(555) 123-4567">
-      </label>
-      <label>Which category do you care about most?
-        <select name="category" required>
-          <option value="" disabled selected>Pick one</option>
-          <option value="sneakers">Sneakers</option>
-          <option value="tech">Tech restocks</option>
-          <option value="collectibles">Collectibles</option>
-          <option value="tickets">Tickets</option>
-          <option value="other">Something else</option>
-        </select>
-      </label>
-      <label class="sms-optin">
-        <input type="checkbox" name="sms_optin" value="yes">
-        <span><strong>Text me instant restock alerts.</strong> By checking this box, you agree to receive recurring automated restock alert texts from RestockRadar at the number provided. Consent is not a condition of purchase. Reply STOP to unsubscribe. Message and data rates may apply.</span>
-      </label>
-      <button type="submit">Claim my $1.99 founding rate</button>
-    </form>
-    <div class="glass success" id="waitlistSuccess">
-      <h3>Your spot is claimed.</h3>
-      <p>You locked the $1.99/mo founding rate for life. We will reach out the moment we launch.</p>
+  <section class="block" id="join">
+    <div class="form-block">
+      <div id="joinForm">
+        <div class="section-kicker">Founding list</div>
+        <h2 class="display">Reserve your $1.99 rate</h2>
+        <p style="color:var(--muted);">No payment due now. Billing starts at launch. Founding members keep $1.99/mo for life.</p>
+        <form class="join" action="https://formsubmit.co/fcarrasco@echelonls.com" method="POST">
+          <input type="hidden" name="_subject" value="New RestockRadar founding member signup">
+          <input type="hidden" name="_autoresponse" value="You're on the RestockRadar founding list. You locked the $1.99/mo rate for life. We'll text and email you the moment we launch.">
+          <input type="hidden" name="_next" value="https://echelonglobal.github.io/restockradar/?joined=true">
+          <label>Phone — this is where the alerts go
+            <input type="tel" name="phone" required autocomplete="tel" placeholder="(555) 123-4567">
+          </label>
+          <label>Name
+            <input type="text" name="name" required autocomplete="name" placeholder="Your name">
+          </label>
+          <label>Email
+            <input type="email" name="email" required autocomplete="email" placeholder="you@example.com">
+          </label>
+          <label>What do you hunt?
+            <select name="category" required>
+              <option value="" disabled selected>Pick one</option>
+              <option value="sneakers">Sneakers</option>
+              <option value="tech">Tech restocks</option>
+              <option value="collectibles">Collectibles</option>
+              <option value="tickets">Tickets</option>
+              <option value="other">Something else</option>
+            </select>
+          </label>
+          <label class="sms-optin">
+            <input type="checkbox" name="sms_optin" value="yes">
+            <span><strong>Text me instant restock alerts.</strong> By checking this box, you agree to receive recurring automated restock alert texts from RestockRadar at the number provided. Consent is not a condition of purchase. Reply STOP to unsubscribe. Message and data rates may apply. See our <a href="privacy.html">Privacy Policy</a> and <a href="terms.html">Terms of Service</a>.</span>
+          </label>
+          <button type="submit">Lock in my $1.99 rate</button>
+        </form>
+      </div>
+      <div class="success" id="joinSuccess">
+        <h3 class="display">You're on the list.</h3>
+        <p>Your $1.99/mo founding rate is reserved. We'll reach out the moment we launch.</p>
+      </div>
     </div>
   </section>
 
-  <section class="faq reveal">
-    <h2>Questions</h2>
+  <section class="block faq">
+    <div class="section-kicker">Questions</div>
+    <h2 class="display">Straight answers</h2>
     <details>
-      <summary>Why is SMS faster than email or Discord?</summary>
-      <p>Texts get read in minutes, usually under 5. Emails sit unopened and Discord pings get buried in busy servers. When a drop sells out in 60 seconds, the channel decides who eats.</p>
+      <summary>Is RestockRadar live yet?</summary>
+      <p>Not yet. We're in pre-launch. Joining the founding list reserves your $1.99/mo rate for life. No payment due now. We'll text and email you the moment we launch.</p>
+    </details>
+    <details>
+      <summary>Why SMS instead of email or Discord?</summary>
+      <p>Speed is the whole game. When a drop sells out in a minute, the channel decides who eats. A text is already in your hand.</p>
     </details>
     <details>
       <summary>Is this a bot that buys for me?</summary>
-      <p>No. We alert, you buy. Bots get accounts banned and orders canceled, and ticket bots break federal law. Our edge is speed of information: you know first, so you check out first, in your own browser, like a normal customer.</p>
+      <p>No. We alert, you buy. Bots get accounts banned and orders canceled. You check out in your own browser, like a normal customer.</p>
     </details>
     <details>
-      <summary>What does founding pricing mean?</summary>
-      <p>The first 500 members (or 90 days, whichever comes first) get Instant SMS at $1.99/mo and keep that rate for life. After the window closes, new members pay $4.99/mo. Founding members never pay more.</p>
+      <summary>What does the founding rate mean?</summary>
+      <p>$1.99/mo, locked for life, for the first 500 members or 90 days, whichever comes first. After that, new members pay $4.99/mo. Founding members never pay more. Billing starts at launch.</p>
     </details>
     <details>
       <summary>When will I get texts?</summary>
-      <p>Only when something you watch restocks, and never between 9pm and 8am your time. Reply STOP any time to opt out.</p>
+      <p>Once we launch: only when something you watch restocks, and never between 9pm and 8am your time. Reply STOP anytime to opt out.</p>
     </details>
     <details>
-      <summary>Which stores do you monitor?</summary>
-      <p>We are starting with the biggest retailers for sneakers, tech, and collectibles. Tell us your must-have store when you sign up and it moves up the list.</p>
+      <summary>Which stores will you watch?</summary>
+      <p>We're launching with the biggest retailers for sneakers, tech, and collectibles. Tell us your must-have store when you join and it moves up the list.</p>
     </details>
   </section>
-
 </div>
 
 <footer>
   <div class="wrap">
-    <p>RestockRadar is in pre-launch. Founding spots are limited to the first 500 members.</p>
+    <div class="micro">© 2026 RestockRadar — Pre-launch</div>
+    <nav>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms of Service</a>
+    </nav>
+    <p>Founding spots limited to the first 500 members or 90 days. No payment due until launch.</p>
   </div>
 </footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.net.min.js"></script>
 <script>
   (function() {
     try {
-      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (!reduceMotion && window.VANTA) {
-        VANTA.NET({
-          el: "#vanta-bg",
-          mouseControls: true,
-          touchControls: true,
-          gyroControls: false,
-          minHeight: 200.00,
-          minWidth: 200.00,
-          scale: 1.00,
-          scaleMobile: 1.00,
-          color: 0x3fb950,
-          backgroundColor: 0x05070a,
-          points: 11.00,
-          maxDistance: 22.00,
-          spacing: 17.00,
-          showDots: true
-        });
+      var target = new Date('2026-12-18T23:59:59-08:00').getTime();
+      var el = document.getElementById('cd');
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      function pad(n) { return (n < 10 ? '0' : '') + n; }
+      function render() {
+        var diff = target - Date.now();
+        if (diff <= 0) { el.textContent = 'WINDOW CLOSED'; return; }
+        var d = Math.floor(diff / 864e5);
+        var h = Math.floor(diff % 864e5 / 36e5);
+        var m = Math.floor(diff % 36e5 / 6e4);
+        var s = Math.floor(diff % 6e4 / 1e3);
+        el.textContent = d + 'D ' + pad(h) + 'H ' + pad(m) + 'M ' + pad(s) + 'S';
       }
-    } catch (e) {}
-  })();
-  (function() {
-    try {
-      var els = document.querySelectorAll('.reveal');
-      if (!('IntersectionObserver' in window)) {
-        els.forEach(function(el) { el.classList.add('visible'); });
-        return;
-      }
-      var io = new IntersectionObserver(function(entries) {
-        entries.forEach(function(entry) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            io.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.12 });
-      els.forEach(function(el) { io.observe(el); });
+      render();
+      if (!reduce) setInterval(render, 1000);
     } catch (e) {}
   })();
   (function() {
     try {
       var params = new URLSearchParams(window.location.search);
       if (params.get('joined') === 'true') {
-        var form = document.getElementById('waitlistForm');
-        if (form) form.style.display = 'none';
-        var s = document.getElementById('waitlistSuccess');
+        var f = document.getElementById('joinForm');
+        if (f) f.style.display = 'none';
+        var s = document.getElementById('joinSuccess');
         if (s) s.style.display = 'block';
       }
     } catch (e) {}

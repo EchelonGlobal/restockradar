@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<!--
+  DRAFT. Not for publication. Working title can be renamed by the owner.
+  =====================================================================
+  VALIDATION PLAN
+  Goal: prove people want hosted restock alerts BEFORE any code is written.
+
+  Where to share this page:
+  - Sneaker and streetwear subreddits (r/sneakers, r/SNKRS and similar).
+    Read each subreddit's self-promo rules first. Post as a builder asking
+    for feedback, not as an ad.
+  - Relevant Discord servers: sneaker cook groups, ticket alert channels,
+    collectible and trading card communities.
+  - X (Twitter): post in sneakerhead, concert ticket, and GPU restock
+    threads. Quote-tweet restock alert accounts and ask if followers would
+    use a hosted version.
+
+  Suggested success bar:
+  - 100 waitlist signups before building anything. If it takes more than
+    2 to 3 weeks of honest sharing to reach 100, the demand is not there
+    yet. Do not spend on proxies or servers until the bar is met.
+  - Bonus signal: 20 or more signups from at least two different
+    categories (for example sneakers AND tickets), which proves the
+    product works beyond one niche.
+
+  Waitlist form wiring: the form on this page is front-end only. On submit
+  it shows a confirmation state and logs the entry to the browser console.
+  A real backend (form endpoint or database) must be added before this
+  page goes live. No signup data is stored anywhere today.
+  =====================================================================
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RestockRadar - Never miss a restock</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: #0d1117; color: #e6edf3; line-height: 1.6;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+  header { padding: 64px 0 48px; text-align: center; }
+  .badge {
+    display: inline-block; font-size: 13px; letter-spacing: 1px;
+    text-transform: uppercase; color: #58a6ff;
+    border: 1px solid #58a6ff; border-radius: 999px;
+    padding: 6px 16px; margin-bottom: 24px;
+  }
+  h1 { font-size: 44px; line-height: 1.15; margin-bottom: 16px; }
+  h1 .accent { color: #3fb950; }
+  .subhead { font-size: 19px; color: #8b949e; max-width: 560px; margin: 0 auto; }
+  section { padding: 40px 0; border-top: 1px solid #21262d; }
+  h2 { font-size: 26px; margin-bottom: 20px; }
+  .problem p { color: #8b949e; margin-bottom: 12px; font-size: 17px; }
+  .steps { display: grid; gap: 16px; }
+  .step {
+    background: #161b22; border: 1px solid #21262d; border-radius: 12px;
+    padding: 20px 22px;
+  }
+  .step .num {
+    display: inline-block; width: 30px; height: 30px; line-height: 30px;
+    text-align: center; border-radius: 50%; background: #3fb950;
+    color: #0d1117; font-weight: 700; margin-bottom: 10px;
+  }
+  .step p { color: #c9d1d9; font-size: 16px; }
+  .cats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .cat {
+    background: #161b22; border: 1px solid #21262d; border-radius: 12px;
+    padding: 18px; font-size: 16px;
+  }
+  .cat strong { display: block; font-size: 17px; margin-bottom: 4px; }
+  .cat span { color: #8b949e; font-size: 14px; }
+  .plans { display: grid; gap: 16px; }
+  @media (min-width: 560px) { .plans { grid-template-columns: 1fr 1fr; } }
+  .plan {
+    background: #161b22; border: 1px solid #21262d; border-radius: 12px;
+    padding: 24px;
+  }
+  .plan.paid { border-color: #3fb950; }
+  .plan h3 { font-size: 19px; margin-bottom: 8px; }
+  .plan ul { list-style: none; }
+  .plan li { color: #c9d1d9; font-size: 15px; margin-bottom: 8px; padding-left: 20px; position: relative; }
+  .plan li::before { content: "+"; position: absolute; left: 0; color: #3fb950; font-weight: 700; }
+  .plan .note { color: #8b949e; font-size: 14px; margin-top: 12px; }
+  form.waitlist {
+    background: #161b22; border: 1px solid #21262d; border-radius: 12px;
+    padding: 28px; display: grid; gap: 14px;
+  }
+  form.waitlist label { font-size: 14px; color: #8b949e; display: grid; gap: 6px; }
+  form.waitlist input, form.waitlist select {
+    background: #0d1117; border: 1px solid #30363d; border-radius: 8px;
+    color: #e6edf3; font-size: 16px; padding: 12px 14px; width: 100%;
+    font-family: inherit;
+  }
+  form.waitlist input:focus, form.waitlist select:focus { outline: 2px solid #58a6ff; border-color: #58a6ff; }
+  form.waitlist button {
+    background: #3fb950; color: #0d1117; font-weight: 700; font-size: 17px;
+    border: none; border-radius: 8px; padding: 14px; cursor: pointer;
+    font-family: inherit;
+  }
+  form.waitlist button:hover { background: #46c65c; }
+  .success {
+    display: none; background: #161b22; border: 1px solid #3fb950;
+    border-radius: 12px; padding: 32px 24px; text-align: center;
+  }
+  .success h3 { color: #3fb950; font-size: 22px; margin-bottom: 10px; }
+  .success p { color: #c9d1d9; }
+  .faq details {
+    background: #161b22; border: 1px solid #21262d; border-radius: 12px;
+    padding: 18px 20px; margin-bottom: 12px;
+  }
+  .faq summary { font-weight: 600; cursor: pointer; font-size: 16px; }
+  .faq p { color: #8b949e; margin-top: 10px; font-size: 15px; }
+  footer { padding: 32px 0 48px; text-align: center; color: #6e7681; font-size: 13px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="badge">Coming soon</div>
+    <h1>Never miss a <span class="accent">restock</span> again.</h1>
+    <p class="subhead">We watch the product pages. You get pinged the second it is back in stock.</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <section class="problem">
+    <h2>The problem</h2>
+    <p>Limited drops sell out in seconds.</p>
+    <p>Scalpers use bots. You refresh the page by hand.</p>
+    <p>By the time you see the restock tweet, it is gone.</p>
+  </section>
+
+  <section>
+    <h2>How it works</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="num">1</div>
+        <p><strong>Paste product links.</strong> Drop in the pages you want watched. Sneakers, tickets, GPUs, whatever.</p>
+      </div>
+      <div class="step">
+        <div class="num">2</div>
+        <p><strong>Pick your alert channel.</strong> Discord, Telegram, or email. Whichever you check fastest.</p>
+      </div>
+      <div class="step">
+        <div class="num">3</div>
+        <p><strong>Get pinged instantly.</strong> Our monitors check around the clock and alert you the moment stock appears.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>What we watch</h2>
+    <div class="cats">
+      <div class="cat"><strong>Sneakers</strong><span>Limited drops and restocks</span></div>
+      <div class="cat"><strong>Tickets</strong><span>Concerts, events, presales</span></div>
+      <div class="cat"><strong>Collectibles</strong><span>Trading cards, figures, exclusives</span></div>
+      <div class="cat"><strong>Tech restocks</strong><span>GPUs, consoles, hard to find gear</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Simple pricing</h2>
+    <div class="plans">
+      <div class="plan">
+        <h3>Free</h3>
+        <ul>
+          <li>Track a few products</li>
+          <li>Pick one alert channel</li>
+          <li>No card required</li>
+        </ul>
+      </div>
+      <div class="plan paid">
+        <h3>Paid</h3>
+        <ul>
+          <li>Track unlimited products</li>
+          <li>Instant alerts, every channel</li>
+          <li>Priority monitoring</li>
+        </ul>
+        <p class="note">Founding pricing to be decided. Early supporters lock founding pricing for life.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="waitlist">
+    <h2>Get on the waitlist</h2>
+    <!-- BACKEND PENDING: this form is front-end only. On submit it shows a
+         confirmation and logs the entry to the console. Wire it to a real
+         endpoint (form service or database) before launch. No data is
+         stored anywhere today. -->
+    <form class="waitlist" id="waitlistForm">
+      <label>Name
+        <input type="text" name="name" required autocomplete="name" placeholder="Your name">
+      </label>
+      <label>Email
+        <input type="email" name="email" required autocomplete="email" placeholder="you@example.com">
+      </label>
+      <label>Which category do you care about most?
+        <select name="category" required>
+          <option value="" disabled selected>Pick one</option>
+          <option value="sneakers">Sneakers</option>
+          <option value="tickets">Tickets</option>
+          <option value="collectibles">Collectibles</option>
+          <option value="tech">Tech restocks</option>
+          <option value="other">Something else</option>
+        </select>
+      </label>
+      <button type="submit">Join the waitlist</button>
+    </form>
+    <div class="success" id="waitlistSuccess">
+      <h3>You are on the list.</h3>
+      <p>We will email you when RestockRadar launches. Early supporters lock founding pricing.</p>
+    </div>
+  </section>
+
+  <section class="faq">
+    <h2>Questions</h2>
+    <details>
+      <summary>Which stores do you monitor?</summary>
+      <p>We are starting with the biggest retailers and marketplaces for each category. Tell us your must-have store on the waitlist and it moves up the list.</p>
+    </details>
+    <details>
+      <summary>How fast are the alerts?</summary>
+      <p>Checks run around the clock and alerts go out the moment stock is detected. Paid plans get faster check intervals. We will publish real numbers once we are live.</p>
+    </details>
+    <details>
+      <summary>Is this affiliated with any retailer?</summary>
+      <p>No. We are independent. We watch public product pages and alert you. We do not buy items for you and we are not a bot that checks out.</p>
+    </details>
+    <details>
+      <summary>What does it cost?</summary>
+      <p>The free tier is free. Paid pricing is not set yet. Waitlist members lock founding pricing, which will be announced before launch.</p>
+    </details>
+  </section>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <p>RestockRadar is in pre-launch. This page is testing interest before we build.</p>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('waitlistForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var form = this;
+    var data = {
+      name: form.name.value,
+      email: form.email.value,
+      category: form.category.value,
+      _subject: 'New RestockRadar waitlist signup'
+    };
+    fetch('https://formsubmit.co/ajax/fcarrasco@echelonls.com', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(data)
+    }).then(function (r) {
+      if (!r.ok) { throw new Error('signup failed'); }
+      form.style.display = 'none';
+      document.getElementById('waitlistSuccess').style.display = 'block';
+    }).catch(function () {
+      var s = document.getElementById('waitlistSuccess');
+      s.querySelector('h3').textContent = 'Something went wrong. Please try again.';
+      s.style.display = 'block';
+    });
+  });
+</script>
+
+</body>
+</html>

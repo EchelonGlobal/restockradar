@@ -188,11 +188,10 @@
 
   <section id="waitlist">
     <h2>Get on the waitlist</h2>
-    <!-- BACKEND PENDING: this form is front-end only. On submit it shows a
-         confirmation and logs the entry to the console. Wire it to a real
-         endpoint (form service or database) before launch. No data is
-         stored anywhere today. -->
-    <form class="waitlist" id="waitlistForm">
+    <form class="waitlist" id="waitlistForm" action="https://formsubmit.co/fcarrasco@echelonls.com" method="POST">
+      <input type="hidden" name="_subject" value="New RestockRadar waitlist signup">
+      <input type="hidden" name="_autoresponse" value="You are on the RestockRadar waitlist! We will email you as soon as we launch. Thanks for being one of the first.">
+      <input type="hidden" name="_next" value="https://echelonglobal.github.io/restockradar/?joined=true">
       <label>Name
         <input type="text" name="name" required autocomplete="name" placeholder="Your name">
       </label>
@@ -246,30 +245,17 @@
 </footer>
 
 <script>
-  document.getElementById('waitlistForm').addEventListener('submit', function (e) {
-    e.preventDefault();
-    var form = this;
-    var data = {
-      name: form.name.value,
-      email: form.email.value,
-      category: form.category.value,
-      _subject: 'New RestockRadar waitlist signup',
-      _autoresponse: 'You are on the RestockRadar waitlist! We will email you as soon as we launch. Thanks for being one of the first.'
-    };
-    fetch('https://formsubmit.co/ajax/fcarrasco@echelonls.com', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify(data)
-    }).then(function (r) {
-      if (!r.ok) { throw new Error('signup failed'); }
-      form.style.display = 'none';
-      document.getElementById('waitlistSuccess').style.display = 'block';
-    }).catch(function () {
-      var s = document.getElementById('waitlistSuccess');
-      s.querySelector('h3').textContent = 'Something went wrong. Please try again.';
-      s.style.display = 'block';
-    });
-  });
+  (function() {
+    try {
+      var params = new URLSearchParams(window.location.search);
+      if (params.get('joined') === 'true') {
+        var form = document.getElementById('waitlistForm');
+        if (form) form.style.display = 'none';
+        var s = document.getElementById('waitlistSuccess');
+        if (s) s.style.display = 'block';
+      }
+    } catch (e) {}
+  })();
 </script>
 
 </body>
